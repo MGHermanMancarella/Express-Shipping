@@ -20,7 +20,7 @@ app.post("/ship", function (req, res, next) {
   if (req.body === undefined) {
     throw new BadRequestError();
   }
-  const { itemId, name, addr, zip, key } = req.body;
+  const { productId, name, addr, zip, key } = req.body;
   if (key !== "SUPER-DUPER-SECRET") {
     console.error("API user didn't send valid key!".red);
     return res.json({"error": "missing key"});
@@ -28,7 +28,7 @@ app.post("/ship", function (req, res, next) {
   console.log("got: ".yellow, req.body);
   const shipId = Math.floor(Math.random() * 10000) + 1000;
 
-  const receipt = { itemId, name, addr, zip, shipId };
+  const receipt = { productId, name, addr, zip, shipId };
   console.log("shipped:".green, receipt);
 
   return res.json({ receipt });
