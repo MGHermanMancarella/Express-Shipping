@@ -18,7 +18,7 @@ async function shipProduct({ productId, name, addr, zip }) {
     method: "POST",
     url: SHIPIT_SHIP_URL,
     data: {
-      itemId: productId,
+      productId: productId,
       name: name,
       addr: addr,
       zip: zip,
