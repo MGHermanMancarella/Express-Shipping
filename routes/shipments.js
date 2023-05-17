@@ -1,12 +1,11 @@
-"use strict";
+'use strict'
 
-const express = require("express");
-const { BadRequestError } = require("../expressError");
-const router = new express.Router();
-const jsonschema = require("jsonschema");
-const orderSchema = require("../schemas/orderschema.json");
-
-const { shipProduct } = require("../shipItApi");
+const express = require('express')
+const { BadRequestError } = require('../expressError')
+const router = new express.Router()
+const jsonschema = require('jsonschema')
+const orderSchema = require('../schemas/orderschema.json')
+const { shipProduct } = require('../shipItApi')
 
 /** POST /ship
  *
@@ -16,22 +15,17 @@ const { shipProduct } = require("../shipItApi");
  * Returns { shipped: shipId }
  */
 
-router.post("/", async function (req, res, next) {
-  const { productId, name, addr, zip } = req.body;
+router.post('/', async function (req, res, next) {
+  const order = jsonschema.validate(req.body, orderSchema, { required: true })
 
-  const order = jsonschema.validate(
-    req.body, orderSchema, { required: true });
   if (!order.valid) {
-    const errs = order.errors.map(err => err.stack);
-    throw new BadRequestError(errs);
+    const errs = order.errors
+    throw new BadRequestError(errs.map(err => err.stack))
   }
 
-  const shipId = await shipProduct({ productId, name, addr, zip });
-  return res.json({ shipped: shipId });
+  const { productId, name, addr, zip } = req.body
+  const shipId = await shipProduct({ productId, name, addr, zip })
+  return res.json({ shipped: shipId })
+})
 
-
-});
-
-
-
-module.exports = router;
+module.exports = router
